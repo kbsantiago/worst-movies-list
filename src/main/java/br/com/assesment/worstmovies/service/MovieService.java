@@ -5,7 +5,6 @@ import br.com.assesment.worstmovies.gateway.model.ProducerInterval;
 import br.com.assesment.worstmovies.gateway.response.ProducerIntervalResponse;
 import br.com.assesment.worstmovies.repository.MovieRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 public class MovieService {
 
     @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     public void save(List<Movie> movies) {
         movies.stream().forEach(m -> {
