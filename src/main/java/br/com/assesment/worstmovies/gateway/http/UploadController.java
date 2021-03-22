@@ -30,7 +30,7 @@ public class UploadController {
     @ApiOperation(value = "Import csv movies list file")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity upload(@RequestParam("file") MultipartFile file) {
-        if (!csvHelper.isValid(file)) {
+        if (!file.isEmpty() || !csvHelper.isValid(file)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Only CSV files are allowed to upload"));
         } else {
             try {

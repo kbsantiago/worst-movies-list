@@ -6,12 +6,13 @@ import br.com.assesment.worstmovies.gateway.response.ProducerIntervalResponse;
 import br.com.assesment.worstmovies.repository.MovieRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @AllArgsConstructor
 public class MovieService {
 
@@ -19,6 +20,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
 
     public void save(List<Movie> movies) {
+        movieRepository.deleteAll();
         movies.stream().forEach(m -> {
             movieRepository.save(m);
         });
@@ -48,15 +50,18 @@ public class MovieService {
         }
 
         producers.removeIf(f -> f.getInterval() == 0);
-        producers = producers.stream().sorted(Comparator.comparing(c -> c.getInterval())).distinct().collect(Collectors.toList());
 
-        ProducerIntervalResponse producerIntervalResponse = new ProducerIntervalResponse()
-                .builder()
-                .min(getWinners(producers, producers.stream().min(Comparator.comparing(ProducerInterval::getInterval)).get().getInterval()))
-                .max(getWinners(producers, producers.stream().max(Comparator.comparing(ProducerInterval::getInterval)).get().getInterval()))
-                .build();
+        if (producers.size() > 0) {
+            producers = producers.stream().sorted(Comparator.comparing(c -> c.getInterval())).distinct().collect(Collectors.toList());
 
-        return producerIntervalResponse;
+            return new ProducerIntervalResponse()
+                    .builder()
+                    .min(getWinners(producers, producers.stream().min(Comparator.comparing(ProducerInterval::getInterval)).get().getInterval()))
+                    .max(getWinners(producers, producers.stream().max(Comparator.comparing(ProducerInterval::getInterval)).get().getInterval()))
+                    .build();
+        }
+
+        return new ProducerIntervalResponse();
     }
 
     private List<ProducerInterval> getWinners(List<ProducerInterval> producers, int value) {
