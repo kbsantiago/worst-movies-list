@@ -43,7 +43,7 @@ public class CSVHelperImpl<T> implements CSVHelper {
                             .year(Integer.parseInt(csvRecord.get("year")))
                             .title(csvRecord.get("title"))
                             .studios(csvRecord.get("studios"))
-                            .producer(producer)
+                            .producer(producer.trim())
                             .winner(csvRecord.get("winner").equals("yes") ? true : false)
                             .build());
                 }

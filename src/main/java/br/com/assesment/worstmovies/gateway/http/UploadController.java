@@ -14,9 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @RequestMapping(name = "/upload")
 @AllArgsConstructor
 public class UploadController {
@@ -30,7 +31,7 @@ public class UploadController {
     @ApiOperation(value = "Import csv movies list file")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity upload(@RequestParam("file") MultipartFile file) {
-        if (!file.isEmpty() || !csvHelper.isValid(file)) {
+        if (file.isEmpty() || !csvHelper.isValid(file)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Only CSV files are allowed to upload"));
         } else {
             try {
